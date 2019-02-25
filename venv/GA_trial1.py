@@ -205,12 +205,12 @@ def split_str(str,j):
     min_list[4] = singlebit_value(str1[7] + "", j, 'blood_sugar')
     min_list[5]=heartrate_value(str1[8]+str1[9]+"",j)
     min_list[6]=st_value(str1[10]+str1[11]+"",j)
-    return min(min_list)
+    return min_list
 
 def fitness_calc(population):
     min_all_row=[0]*df.shape[0]
     for j in range(0,df.shape[0]):
-        min_all_row[j]=split_str(population,j)
+        min_all_row[j]=min(split_str(population,j))
     fitness_of_population = fitness_sum(min_all_row)
     return fitness_of_population
 
@@ -232,14 +232,87 @@ def cross_mutate_selected(population_old,fitness_population_old):
     pop_list[1] = mutation(pop_list_cross[1])
     return pop_list
 
+def check_support(str):
+    a = 0
+    for i in range(0,df.shape[0]):
+        min_list = split_str(str,i)
+        for j in range(0,len(min_list)):
+            if min_list[j]>0.0:
+                continue
+            else:
+                break
+
+        if j==(len(min_list)-1):
+            a = a+1
+    return a
+
+
+def calc_support(selected_pop):
+    support_val = [0.0]*10
+    for i in range(0,len(selected_pop)):
+        support_val[i] = check_support(selected_pop[i])
+    print support_val
+    return support_val
+
+def print_all_pop(final_pop,support_val):
+    for i in range (0,len(final_pop)):
+        pop = print_pop(final_pop[i])
+        print('Population = ',pop,' Support = ',support_val[i])
+
+def double_bit_conv(str):
+    if str=="00":
+        return 'L'
+    elif str=="01":
+        return 'M'
+    elif str=="10":
+        return 'H'
+    else:
+        return 'VH'
+
+def st_bit_conv(str):
+    if str=="00":
+        return 'N'
+    elif str=="01":
+        return 'SA'
+    else:
+        return 'H'
+
+def get_sex_conv(str):
+    if str=="1":
+        return 'M'
+    else:
+        return 'F'
+
+def print_pop(population):
+    pop = ""
+    age = double_bit_conv(population[0]+population[1]+"")
+    sex = get_sex_conv(population[2]+"")
+    blood = double_bit_conv(population[3]+population[4]+"")
+    chol = double_bit_conv(population[5] + population[6] + "")
+    sugar = population[7]+""
+    heart = double_bit_conv(population[8] + population[9] + "")
+    st = st_bit_conv(population[10] + population[11] + "")
+    pop = "Age = ",age," Sex = ",sex," Blood Pressure = ",blood," Cholesterol = ",chol," Blood Sugar = ",sugar," Heart Rate = ",heart," ST Depression = ",st,""
+    return pop
+
 def calc_top_ten(fit_all,pop_all):
     fitness_population_old = [0.0]*10
     population_old = [""]*10
+    diff_val = [0.0]*20
+    rand = random.uniform(min(fit_all), max(fit_all))
+    print ('Random ',rand)
+
+    for i in range(0,len(fit_all)):
+        diff_val[i] = abs(rand-fit_all[i])
+
+    print ("Diff ",diff_val)
     for i in range(0,10):
-        fitness_population_old[i] = max(fit_all)
-        index = fit_all.index(fitness_population_old[i])
+        min_val = min(diff_val)
+        index = diff_val.index(min_val)
+        print ('Index ',index)
+        fitness_population_old[i] = fit_all[index]
         population_old[i] = pop_all[index]
-        fit_all[index] = 0
+        diff_val[index] = max(fit_all)
 
     return population_old
 
@@ -279,5 +352,7 @@ if __name__ == '__main__':
         fitness_diff = abs(fitness_population_old_max-fitness_population_new_max)
         print ('Fitness Diff = ',fitness_diff)
         if(fitness_diff<0.001):
+            support_val = calc_support(population_old)
+            print_all_pop(population_old,support_val)
             exit(0)
 
