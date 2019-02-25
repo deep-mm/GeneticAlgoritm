@@ -257,7 +257,7 @@ def calc_support(selected_pop):
 def print_all_pop(final_pop,support_val):
     for i in range (0,len(final_pop)):
         pop = print_pop(final_pop[i])
-        print('Population = ',pop,' Support = ',support_val[i])
+        print('Population = ',pop,' Support = ',support_val[i],' Support % = ',(support_val[i]*100)/float(df.shape[0]))
 
 def double_bit_conv(str):
     if str=="00":
