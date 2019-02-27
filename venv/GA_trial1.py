@@ -234,16 +234,19 @@ def cross_mutate_selected(population_old,fitness_population_old):
 
 def check_support(str):
     a = 0
-    for i in range(0,df.shape[0]):
-        min_list = split_str(str,i)
-        for j in range(0,len(min_list)):
-            if min_list[j]>0.0:
+    flag = 0
+    for i in range(0, df.shape[0]):
+        min_list = split_str(str, i)
+        flag = 0
+        for j in range(0, len(min_list)):
+            if min_list[j] > 0.0:
                 continue
             else:
+                flag = 1
                 break
 
-        if j==(len(min_list)-1):
-            a = a+1
+        if flag == 0:
+            a = a + 1
     return a
 
 

@@ -13,7 +13,7 @@ doublebit = [0, 2, 4, 7, 9]
 
 df = pd.read_csv("/Users/deepmehta/Deep/Projects/Parakh/venv/output.csv", sep=',', header=None, names=columns)
 
-df = df.drop([ "sex", "chest_pain","restecg", "exang",
+df = df.drop(["sex", "chest_pain", "restecg", "exang",
               "slope", "ca", "thal", "num"], axis=1)
 
 init_population = ["00000010000", "01010100101",
@@ -81,7 +81,7 @@ def check_validity(offspring):
     age = char_offspring[0] + char_offspring[1] + ""
     heart = char_offspring[7] + char_offspring[8] + ""
     st = char_offspring[9] + char_offspring[10] + ""
-    if (age == "11" or heart == "11" or st == "11"):
+    if age == "11" or heart == "11" or st == "11":
         return False
 
     return True
@@ -98,18 +98,18 @@ def mutation(str):
     myiter = iter(range(0, (len(str) - 1)))
     for j in myiter:
         for k in range(0, 6):
-            if (value[k] > 0.5 and j in singlebit):
+            if value[k] > 0.5 and j in singlebit:
                 next(myiter, None)
-                if (char_offspring[j] is '0'):
+                if char_offspring[j] is '0':
                     char_offspring[j] = '1'
                 else:
                     char_offspring[j] = '0'
 
-            elif (value[k] > 0.5 and j in doublebit):
+            elif value[k] > 0.5 and j in doublebit:
                 next(myiter, None)
                 next(myiter, None)
                 selectbit = random.choice((j, j + 1))
-                if (char_offspring[selectbit] is '0'):
+                if char_offspring[selectbit] is '0':
                     char_offspring[selectbit] = '1'
                 else:
                     char_offspring[selectbit] = '0'
@@ -125,7 +125,7 @@ def mutation(str):
 
 
 def age_value(str, j):
-    if (str == "00"):
+    if str == "00":
         age = df['age_low'][j]
     elif (str == "01"):
         age = df['age_med'][j]
@@ -354,28 +354,28 @@ if __name__ == '__main__':
 
     i = 0
     while True:
-		fitness_population_old_max = max(fitness_population_old)
-		print('Max Old = ', fitness_population_old_max)
-		print('Old population fitness = ', fitness_population_old)
-		for i in range(0, 10, 2):
-			pop_list = cross_mutate_selected(population_old, fitness_population_old)
-			population_new[i] = pop_list[0]
-			population_new[i + 1] = pop_list[1]
-			fitness_population_new[i] = fitness_calc(population_new[i])
-			fitness_population_new[i + 1] = fitness_calc(population_new[i + 1])
+        fitness_population_old_max = max(fitness_population_old)
+        print('Max Old = ', fitness_population_old_max)
+        print('Old population fitness = ', fitness_population_old)
+        for i in range(0, 10, 2):
+            pop_list = cross_mutate_selected(population_old, fitness_population_old)
+            population_new[i] = pop_list[0]
+            population_new[i + 1] = pop_list[1]
+            fitness_population_new[i] = fitness_calc(population_new[i])
+            fitness_population_new[i + 1] = fitness_calc(population_new[i + 1])
 
-		fit_all = fitness_population_old + fitness_population_new
-		pop_all = population_old + population_new
-		print('New population fitness = ', fitness_population_new)
-		population_old = calc_top_ten(fit_all, pop_all)
-		fitness_population_old = pop_fitness(population_old)
-		fitness_population_new_max = max(fitness_population_old)
-		print('Max New = ', fitness_population_new_max)
-		print('New top 10 population fitness = ', fitness_population_old)
-		print('Population ', population_old)
-		fitness_diff = abs(fitness_population_old_max - fitness_population_new_max)
-		print('Fitness Diff = ', fitness_diff)
-		if (fitness_diff < 0.001):
-			support_val = calc_support(population_old)
-			print_all_pop(population_old, support_val)
-			exit(0)
+        fit_all = fitness_population_old + fitness_population_new
+        pop_all = population_old + population_new
+        print('New population fitness = ', fitness_population_new)
+        population_old = calc_top_ten(fit_all, pop_all)
+        fitness_population_old = pop_fitness(population_old)
+        fitness_population_new_max = max(fitness_population_old)
+        print('Max New = ', fitness_population_new_max)
+        print('New top 10 population fitness = ', fitness_population_old)
+        print('Population ', population_old)
+        fitness_diff = abs(fitness_population_old_max - fitness_population_new_max)
+        print('Fitness Diff = ', fitness_diff)
+        if fitness_diff < 0.001:
+            support_val = calc_support(population_old)
+            print_all_pop(population_old, support_val)
+            exit(0)
