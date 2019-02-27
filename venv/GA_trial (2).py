@@ -11,7 +11,7 @@ columns = ["sex", "chest_pain", "blood_sugar", "restecg", "exang",
 singlebit = [6]
 doublebit = [0, 2, 4, 7, 9]
 
-df = pd.read_csv("C:/Users/parak/PycharmProjects/Python/HeartDisease/output.csv", sep=',', header=None, names=columns)
+df = pd.read_csv("/Users/deepmehta/Deep/Projects/Parakh/venv/output.csv", sep=',', header=None, names=columns)
 
 df = df.drop([ "sex", "chest_pain","restecg", "exang",
               "slope", "ca", "thal", "num"], axis=1)
@@ -248,15 +248,18 @@ def cross_mutate_selected(population_old, fitness_population_old):
 
 def check_support(str):
     a = 0
+    flag = 0
     for i in range(0, df.shape[0]):
         min_list = split_str(str, i)
+        flag = 0
         for j in range(0, len(min_list)):
             if min_list[j] > 0.0:
                 continue
             else:
+                flag = 1
                 break
 
-        if j == (len(min_list) - 1):
+        if flag == 0:
             a = a + 1
     return a
 
@@ -350,7 +353,7 @@ if __name__ == '__main__':
     fitness_population_old_max = max(fitness_population_old)
 
     i = 0
-	while True:
+    while True:
 		fitness_population_old_max = max(fitness_population_old)
 		print('Max Old = ', fitness_population_old_max)
 		print('Old population fitness = ', fitness_population_old)
